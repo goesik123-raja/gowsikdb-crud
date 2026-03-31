@@ -14,7 +14,7 @@ app.use(express.json());
 const FoodModel = require("./models/food");
 
 // MongoDB connection
-mongoose.connect("mongodb+srv://admin:admin@cluster0.lsxuxwt.mongodb.net/food")
+mongoose.connect("mongodb+srv://admin:admin@cluster0.lsxuxwt.mongodb.net/?appName=Cluster0/food")
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log(err));
 
