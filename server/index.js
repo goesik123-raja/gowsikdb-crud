@@ -3,10 +3,11 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
 
+
 app.use(cors({
-    origin: "http://localhost:3000",
-    https://gowsikdb-crud.onrender.com,
-    methods ["PUT", "GET", "POST", "DELETE"]
+  origin: "https://gowsikdb-crud.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
 
 app.use(express.json());
