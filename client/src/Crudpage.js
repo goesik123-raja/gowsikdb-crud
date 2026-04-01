@@ -10,7 +10,7 @@ function Crudpage() {
 
     //  INSERT
     const addfoodData = () => {
-        Axios.post("http://localhost:3001/insert", {
+        Axios.post("https://gowsikdb-crud.onrender.com/insert",{
             foodname,
             description,
         })
@@ -22,7 +22,7 @@ function Crudpage() {
 
     //  READ
     const fetchData = () => {
-        Axios.get("http://localhost:3001/read")
+        Axios.get("https://gowsikdb-crud.onrender.com/read")
             .then((response) => {
                 setfoodList(response.data);
             })
@@ -31,7 +31,7 @@ function Crudpage() {
 
     //  UPDATE
     const updateFood = (id) => {
-        Axios.put("http://localhost:3001/update", {
+        Axios.put("https://gowsikdb-crud.onrender.com/update", {
             id,
             newfoodname: newfoodName,
         }).then(() => fetchData());
@@ -39,7 +39,7 @@ function Crudpage() {
 
     //  DELETE
     const deleteFood = (id) => {
-        Axios.delete(`http://localhost:3001/delete/${id}`)
+        Axios.delete(`https://gowsikdb-crud.onrender.com/delete/${id}`)
             .then(() => fetchData())
             .catch((err) => console.log(err));
     };
