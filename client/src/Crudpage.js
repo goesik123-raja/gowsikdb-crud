@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Axios from "axios";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function Crudpage() {
     const [foodname, setfoodName] = useState("");
@@ -8,43 +9,40 @@ function Crudpage() {
     const [foodList, setfoodList] = useState([]);
     const [newfoodName, setnewFoodName] = useState("");
 
-    //  INSERT
+    // INSERT
     const addfoodData = () => {
-        Axios.post("https://gowsikdb-crud.onrender.com/insert",{
-            foodname,
-            description,
-        })
+        axios.post("https://gowsikdb-crud.onrender.com/insert", { foodname, description })
             .then(() => {
-                fetchData(); // refresh
+                fetchData();
+                setfoodName("");        // ✅ clear input
+                setDescription("");     // ✅ clear input
             })
             .catch((err) => console.log(err));
     };
 
-    //  READ
+    // READ
     const fetchData = () => {
-        Axios.get("https://gowsikdb-crud.onrender.com/read")
+        axios.get("https://gowsikdb-crud.onrender.com/read")
             .then((response) => {
                 setfoodList(response.data);
             })
             .catch((err) => console.log(err));
     };
 
-    //  UPDATE
+    // UPDATE
     const updateFood = (id) => {
-        Axios.put("https://gowsikdb-crud.onrender.com/update", {
-            id,
-            newfoodname: newfoodName,
-        }).then(() => fetchData());
+        axios.put("https://gowsikdb-crud.onrender.com/update", {
+            id, newfoodName
+        }).then(() => fetchData()); // ✅ fix here
     };
 
-    //  DELETE
+    // DELETE
     const deleteFood = (id) => {
-        Axios.delete(`https://gowsikdb-crud.onrender.com/delete/${id}`)
+        axios.delete(`https://gowsikdb-crud.onrender.com/delete/${id}`)
             .then(() => fetchData())
             .catch((err) => console.log(err));
     };
 
-    // auto load
     useEffect(() => {
         fetchData();
     }, []);
@@ -58,16 +56,25 @@ function Crudpage() {
                     type="text"
                     className="form-control"
                     placeholder="food name"
+                    value={foodname}   // ✅ add value
                     onChange={(e) => setfoodName(e.target.value)}
                 />
             </div>
 
             <div className="mb-3">
-                <input type="text" className="form-control" placeholder="food description"onChange={(e) => setDescription(e.target.value)}/>
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="food description"
+                    value={description}   // ✅ add value
+                    onChange={(e) => setDescription(e.target.value)}
+                />
             </div>
 
             <div className="mb-3">
-                <button className="btn btn-primary" onClick={addfoodData}> Add Food</button>
+                <button className="btn btn-primary" onClick={addfoodData}>
+                    Add Food
+                </button>
             </div>
 
             <h3>View Details</h3>
@@ -89,12 +96,26 @@ function Crudpage() {
                             <td>{val.description}</td>
 
                             <td>
-                                <input type="text"placeholder="Update name"onChange={(e) => setnewFoodName(e.target.value)} />
-                                <button className="btn btn-success"  onClick={() => updateFood(val._id)}> Edit</button>
+                                <input
+                                    type="text"
+                                    placeholder="Update name"
+                                    onChange={(e) => setnewFoodName(e.target.value)}
+                                />
+                                <button
+                                    className="btn btn-success"
+                                    onClick={() => updateFood(val._id)}
+                                >
+                                    Edit
+                                </button>
                             </td>
 
                             <td>
-                                <button className="btn btn-danger"onClick={() => deleteFood(val._id)}>Delete </button>
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={() => deleteFood(val._id)}
+                                >
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     ))}

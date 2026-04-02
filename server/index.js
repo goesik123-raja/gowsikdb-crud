@@ -1,95 +1,91 @@
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const app = express();
+const express=require("express")
+const mongoose=require("mongoose")
+const cors=require("cors")
+const app=express()
 
 app.use(cors({
-    origin: "http://localhost:3000",
-    https://gowsikdb-crud.onrender.com,
-    methods ["PUT", "GET", "POST", "DELETE"]
-}));
+    origin:'http://localhost:3000',
+    https:"//gowsikdb-crud.onrender.com",
+    methods:['PUT','GET','POST','DELETE']
+}))
 
-app.use(express.json());
+app.use(express.json())
 
-const FoodModel = require("./models/food");
-
-// MongoDB connection
-mongoose.connect("mongodb+srv://admin:admin@cluster0.lsxuxwt.mongodb.net/?appName=Cluster0/food")
-    .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.log(err));
+const FoodModel=require("./models/food")
+mongoose.connect("mongodb+srv://admin:admin@cluster0.lsxuxwt.mongodb.net/?appName=Cluster0")
+.then(()=>console.log('connected'))
+.catch(err=>console.log(err))
 
 
-// 🔹 INSERT
-app.post("/insert", async (req, res) => {
-    const { foodname, description } = req.body;
-
-    try {
-        const food = new FoodModel({
-            foodname,
-            description
-        });
-
-        const result = await food.save();
-        res.send(result);
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("Error inserting data");
+//insert the data 
+app.post("/insert",async(req,res)=>{
+    const {foodName,description}=req.body;
+    const food=new FoodModel({
+        foodName:foodName,
+        description:description
+    })
+    try{
+        const result=await food.save()
+        res.send(result)
+        console.log(result)
     }
-});
+    catch(err)
+    {
+        console.log(err)
 
+    }
+})
 
-//  READ
-app.get("/read", async (req, res) => {
-    try {
-        const food = await FoodModel.find();
+//Read the data
+app.get("/read",async(req,res)=>{
+    try
+    {
+        const food=await FoodModel.find();
         res.send(food);
-    } catch (err) {
-        res.status(500).send("Error fetching data");
     }
-});
+    catch(err)
+    {
+        res.send("Error")
+    }
+})
 
-
-// UPDATE
-app.put("/update", async (req, res) => {
-    const { id, newfoodname } = req.body;
-
-    try {
-        const updated = await FoodModel.findByIdAndUpdate(
-            id,
-            { foodname: newfoodname },
-            { new: true }
-        );
-
-        if (!updated) {
-            return res.status(404).send("Food not found");
+//updating the data
+app.put("/update",async(req,res)=>{
+    const {newFoodName,id}=req.body;
+    try
+    {
+        const updateFood=await FoodModel.findById(id);
+        if(!updateFood)
+        {
+            return res.status(400).send("Data not found");
         }
-
-        res.send("Updated successfully");
-    } catch (err) {
+        updateFood.foodName=newFoodName;
+        await updateFood.save()
+        res.send("Data Updated...")
+    }
+    catch(err)
+    {
         console.log(err);
-        res.status(500).send("Update error");
     }
-});
+})
 
-
-//  DELETE
-app.delete("/delete/:id", async (req, res) => {
-    try {
-        const deleted = await FoodModel.findByIdAndDelete(req.params.id);
-
-        if (!deleted) {
-            return res.status(404).send("Food not found");
+//deleting the data
+app.delete("/delete/:id",async(req,res)=>{
+    const id=req.params.id;
+    try
+    {
+        const result=await FoodModel.findByIdAndDelete(id);
+        if(!result)
+        {
+            return res.status(404).send("Food item not found")
         }
-
-        res.send("Deleted successfully");
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Delete error");
+        res.send("Food item delete")
+    }catch(err)
+    {
+        console.errror(err)
     }
-});
+})
 
-
-//  SERVER
-app.listen(3001, () => {
-    console.log("Server running on port 3001");
-});
+app.listen(3001,()=>{
+    console.log("Server is Running...")
+})
