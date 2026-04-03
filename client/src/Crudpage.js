@@ -21,14 +21,14 @@ function CrudPage() {
     }
 
     Axios.post("https://gowsikdb-crud.onrender.com/insert", {
-      foodName,
+      foodname: foodName, // ✅ FIX
       description,
     })
       .then((res) => {
         console.log("Inserted:", res.data);
         fetchData();
-        setFoodName("");       // clear input
-        setDescription("");    // clear input
+        setFoodName("");
+        setDescription("");
       })
       .catch((err) => {
         console.log("Insert Error:", err);
@@ -56,7 +56,7 @@ function CrudPage() {
 
     Axios.put("https://gowsikdb-crud.onrender.com/update", {
       id,
-      newFoodName,
+      newfoodName: newFoodName, // ✅ FIX
     })
       .then(() => {
         console.log("Updated");
@@ -79,22 +79,20 @@ function CrudPage() {
     <div className="container">
       <h1>Fruits Name</h1>
 
-      {/* Food Name */}
       <div className="mb-3">
         <input
           type="text"
-          className="form-control"   // ✅ fixed typo
+          className="form-control"
           placeholder="Food Name"
           value={foodName}
           onChange={(e) => setFoodName(e.target.value)}
         />
       </div>
 
-      {/* Description */}
       <div className="mb-3">
         <input
           type="text"
-          className="form-control"   // ✅ fixed typo
+          className="form-control"
           placeholder="Food Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -110,7 +108,6 @@ function CrudPage() {
       <h3>View Details</h3>
 
       <table className="table table-bordered table-striped">
-        {/* ✅ FIXED TABLE STRUCTURE */}
         <thead>
           <tr>
             <th>Food Name</th>
@@ -130,7 +127,7 @@ function CrudPage() {
           ) : (
             foodList.map((val) => (
               <tr key={val._id}>
-                <td>{val.foodName}</td>
+                <td>{val.foodname}</td> {/* ✅ FIX */}
                 <td>{val.description}</td>
 
                 <td>

@@ -4,13 +4,14 @@ const mongoose = require("mongoose");
 
 const app = express();
 
-// ✅ CORS FIX
+// ✅ CORS FIX (important)
 app.use(cors({
     origin: [
         "http://localhost:3000",
         "https://gowsikdb-crud.vercel.app"
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"]
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
 }));
 
 app.use(express.json());
@@ -18,10 +19,10 @@ app.use(express.json());
 // ✅ MODEL IMPORT
 const FoodModel = require("./models/food");
 
-// ✅ MongoDB CONNECT (correct DB name)
+// ✅ MongoDB CONNECT
 mongoose.connect("mongodb+srv://admin:admin@cluster0.lsxuxwt.mongodb.net/food?retryWrites=true&w=majority")
     .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.log(err));
+    .catch(err => console.log("Mongo Error:", err));
 
 
 // 🔹 INSERT
@@ -29,16 +30,13 @@ app.post("/insert", async (req, res) => {
     const { foodname, description } = req.body;
 
     try {
-        const food = new FoodModel({
-            foodname,
-            description
-        });
-
+        const food = new FoodModel({ foodname, description });
         const result = await food.save();
-        res.send(result);
+
+        res.status(200).json(result); // ✅ better response
     } catch (err) {
         console.log(err);
-        res.status(500).send("Error inserting data");
+        res.status(500).json({ error: "Error inserting data" });
     }
 });
 
@@ -47,10 +45,11 @@ app.post("/insert", async (req, res) => {
 app.get("/read", async (req, res) => {
     try {
         const food = await FoodModel.find();
-        console.log("DATA:", food); // ✅ DEBUG
-        res.send(food);
+
+        console.log("DATA:", food); // ✅ debug
+        res.status(200).json(food); // ✅ json response
     } catch (err) {
-        res.status(500).send("Error fetching data");
+        res.status(500).json({ error: "Error fetching data" });
     }
 });
 
@@ -67,13 +66,13 @@ app.put("/update", async (req, res) => {
         );
 
         if (!updated) {
-            return res.status(404).send("Food not found");
+            return res.status(404).json({ error: "Food not found" });
         }
 
-        res.send("Updated successfully");
+        res.status(200).json(updated); // ✅ return updated data
     } catch (err) {
         console.log(err);
-        res.status(500).send("Update error");
+        res.status(500).json({ error: "Update error" });
     }
 });
 
@@ -84,18 +83,19 @@ app.delete("/delete/:id", async (req, res) => {
         const deleted = await FoodModel.findByIdAndDelete(req.params.id);
 
         if (!deleted) {
-            return res.status(404).send("Food not found");
+            return res.status(404).json({ error: "Food not found" });
         }
 
-        res.send("Deleted successfully");
+        res.status(200).json({ message: "Deleted successfully" });
     } catch (err) {
         console.error(err);
-        res.status(500).send("Delete error");
+        res.status(500).json({ error: "Delete error" });
     }
 });
 
 
 // 🔹 SERVER
-app.listen(3001, () => {
-    console.log("Server running on port 3001");
+const PORT = process.env.PORT || 3001; // ✅ render support
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
