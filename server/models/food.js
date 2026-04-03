@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
-const foodSchema = new mongoose.Schema({
-    foodname: {type: String,required: true},description: {type: String,required: true}
+const FoodSchema = new mongoose.Schema({
+    foodname: String,
+    description: String
 });
 
-const Food = mongoose.model("Food", foodSchema);
-module.exports = Food;
+// ✅ EXACT COLLECTION NAME
+module.exports = mongoose.model("Food", FoodSchema, "foods");
