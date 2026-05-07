@@ -5,5 +5,5 @@ const FoodSchema = new mongoose.Schema({
     description: String
 });
 
-// ✅ EXACT COLLECTION NAME
+// EXACT COLLECTION NAME
 module.exports = mongoose.model("Food", FoodSchema, "foods");

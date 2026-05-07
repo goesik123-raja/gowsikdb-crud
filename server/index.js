@@ -4,11 +4,11 @@ const mongoose = require("mongoose");
 
 const app = express();
 
-// ✅ CORS FIX (important)
+
 app.use(cors({
     origin: [
         "http://localhost:3000",
-        "https://gowsikdb-crud.vercel.app"
+        "https://gowsikdb-crud.vercel.app/crud"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
@@ -16,16 +16,16 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ MODEL IMPORT
+
 const FoodModel = require("./models/food");
 
-// ✅ MongoDB CONNECT
+
 mongoose.connect("mongodb+srv://admin:admin@cluster0.lsxuxwt.mongodb.net/food?retryWrites=true&w=majority")
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log("Mongo Error:", err));
 
 
-// 🔹 INSERT
+
 app.post("/insert", async (req, res) => {
     const { foodname, description } = req.body;
 
@@ -33,7 +33,7 @@ app.post("/insert", async (req, res) => {
         const food = new FoodModel({ foodname, description });
         const result = await food.save();
 
-        res.status(200).json(result); // ✅ better response
+        res.status(200).json(result); 
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: "Error inserting data" });
@@ -41,20 +41,20 @@ app.post("/insert", async (req, res) => {
 });
 
 
-// 🔹 READ
+//  READ
 app.get("/read", async (req, res) => {
     try {
         const food = await FoodModel.find();
 
-        console.log("DATA:", food); // ✅ debug
-        res.status(200).json(food); // ✅ json response
+        console.log("DATA:", food); 
+        res.status(200).json(food); 
     } catch (err) {
         res.status(500).json({ error: "Error fetching data" });
     }
 });
 
 
-// 🔹 UPDATE
+//  UPDATE
 app.put("/update", async (req, res) => {
     const { id, newfoodName } = req.body;
 
@@ -69,7 +69,7 @@ app.put("/update", async (req, res) => {
             return res.status(404).json({ error: "Food not found" });
         }
 
-        res.status(200).json(updated); // ✅ return updated data
+        res.status(200).json(updated); // 
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: "Update error" });
@@ -77,7 +77,7 @@ app.put("/update", async (req, res) => {
 });
 
 
-// 🔹 DELETE
+//  DELETE
 app.delete("/delete/:id", async (req, res) => {
     try {
         const deleted = await FoodModel.findByIdAndDelete(req.params.id);
@@ -94,8 +94,8 @@ app.delete("/delete/:id", async (req, res) => {
 });
 
 
-// 🔹 SERVER
-const PORT = process.env.PORT || 3001; // ✅ render support
+//  SERVER
+const PORT = process.env.PORT || 3001; 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
